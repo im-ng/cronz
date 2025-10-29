@@ -1,0 +1,15 @@
+.{
+    .name = .crontasks,
+    .version = "0.0.1",
+    .fingerprint = 0xb4e8ff8eb48991fd,
+    .minimum_zig_version = "0.15.1",
+    .dependencies = .{
+        .cronz = .{ .path = "../." },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+    .use_llvm = true,
+}

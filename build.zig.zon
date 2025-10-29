@@ -1,0 +1,21 @@
+.{
+    .name = .cronz,
+    .version = "0.0.1",
+    .fingerprint = 0xd1a3c0811258d0a5,
+    .minimum_zig_version = "0.15.1",
+    .dependencies = .{
+        .regex = .{
+            .url = "git+https://github.com/tiehuis/zig-regex.git#ee759955e59ae292f4074d62308f953feeecac61",
+            .hash = "regex-0.1.3-axC352raAQCBo-WcgB_nFMFmO2d3QLBLpE8-ebizdeX_",
+        },
+        .zdt = .{
+            .url = "git+https://codeberg.org/FObersteiner/zdt.git#fa55f4080752ce1c48f2bb392e9513f87b59d8cb",
+            .hash = "zdt-0.8.1-xr0_vABUDwDExZVsT91Qid0tOc_48sI47Xhg6nbFsqqC",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
