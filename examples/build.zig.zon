@@ -5,6 +5,11 @@
     .minimum_zig_version = "0.15.1",
     .dependencies = .{
         .cronz = .{ .path = "../." },
+        //.cronz = .{
+        //  .url = "git+https://github.com/im-ng/cronz.git#ab0acfc88702ec7a29432
+        // 568d19086306e6fc87c",
+        //  .hash = "cronz-0.0.1-pdBYEmcvAAB09KLva66o2ANaUqs8hDem1CEq0ksXooF-",
+        //},
     },
     .paths = .{
         "build.zig",

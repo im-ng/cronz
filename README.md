@@ -1,4 +1,4 @@
-# cronz
+![cronz](./docs/cronz.webp)
 
 The purpose of this `zig` library is to enhance the scheduling of the repeatable tasks using the crontab notation with zero allocations once it is set.
 
@@ -12,9 +12,9 @@ Additionally, it offers a straightforward invocation that allows developers to e
 
 With its focus on simple and zero allocation, this library is ideal for applications requiring efficient task management.
 
-### Example
+### [Example](./examples/basic/main.zig)
 
-```
+```zig
 const std = @import("std");
 const Cronz = @import("cronz");
 
@@ -55,26 +55,57 @@ fn task2() !void {
 
 ![alt](./docs/basic.webp)
 
+### TODOs
+- [x] Hook predefined method signature `fn method() !void`
+- [ ] Hook custom method signatures `fn (comptime T) any returns`
+
 
 ### Usage
 
+We can refer to examples [build.zig.zon](./examples/build.zig.zon) for quick setup
+
 Add cronz to your build.zig.zon:
 
-```
+```bash
 zig fetch --save https://github.com/im-ng/cronz/archive/refs/heads/main.zip
 ```
 
-Update module depency in build.zig
+```zig
+.{
+    .name = .crontasks,
+    .version = "0.0.1",
+    .fingerprint = 0xb4e8ff8eb48991fd,
+    .minimum_zig_version = "0.15.1",
+    .dependencies = .{
+        .cronz = .{
+          .url = "git+https://github.com/im-ng/cronz.git#ab0acfc88702ec7a29432
+         568d19086306e6fc87c",
+          .hash = "cronz-0.0.1-pdBYEmcvAAB09KLva66o2ANaUqs8hDem1CEq0ksXooF-",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+    .use_llvm = true,
+}
 
 ```
+
+Update module depency in [build.zig](./examples/build.zig)
+
+```zig
+//reference cronz module
 const cronz = b.dependency("cronz", .{});
 
+//import cronz module to your root
 exe.root_module.addImport("cronz", cronz.module("cronz"));
 ```
 
 Now start importing as seen in above example.
 
-### Notation Supported
+### Supported Crontab notations
 
 | Format            | What it does?           | Mode |
 | ----------------- | ----------------------- | --- |
@@ -83,7 +114,7 @@ Now start importing as seen in above example.
 | \* *\/2  * * * * | Execute on every two minutes | Split |
 | \* 1,3,5,10 * * * * | Execute on every 1st, 3rd, 5th and 10th Minute| Repeat |
 
-Refer [crontab](crontab.guru) for more format support
+Refer [crontab](https://crontab.guru) for more format support
 
 ## 🤝 Attribution
 
