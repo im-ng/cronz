@@ -29,8 +29,9 @@ thread: std.Thread = undefined,
 jobs: std.array_list.Managed(*job) = undefined,
 mutex: std.Thread.Mutex = undefined,
 signal: Atomic(bool) = undefined,
+io: std.Io = undefined,
 
-pub fn create(allocator: std.mem.Allocator) !*Cronz {
+pub fn create(io: std.Io, allocator: std.mem.Allocator) !*Cronz {
     const c = try allocator.create(Cronz);
     errdefer allocator.destroy(c);
 
@@ -39,6 +40,7 @@ pub fn create(allocator: std.mem.Allocator) !*Cronz {
     c.signal = Atomic(bool).init(true);
     c.jobs = std.array_list.Managed(*job).init(allocator);
     c.thread = try Thread.spawn(.{}, Cronz.runSchedules, .{c});
+    c.io = io;
 
     _cronz = c;
 
@@ -63,7 +65,7 @@ fn registerInterruption() void {
     }, null);
 }
 
-fn shutdown(_: c_int) callconv(.c) void {
+fn shutdown(_: std.posix.SIG) callconv(.c) void {
     _cronz.signal.store(false, .release);
 }
 
@@ -109,9 +111,9 @@ pub fn destroy(self: *Self) void {
     self.thread.join();
 }
 
-fn runSchedules(self: *Self) void {
+fn runSchedules(self: *Self) !void {
     while (self.signal.load(.monotonic)) {
-        std.Thread.sleep(std.time.ns_per_s);
+        try std.Io.Clock.Duration.sleep(.{ .clock = .real, .raw = .fromSeconds(1) }, self.io);
         const now = Datetime.nowUTC();
         for (self.jobs.items) |j| {
             if (j.compare(now)) {

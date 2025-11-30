@@ -8,7 +8,9 @@ pub fn main() !void {
     defer arena_instance.deinit();
     allocator = arena_instance.allocator();
 
-    const cronz = try Cronz.create(allocator);
+    var threaded : std.Io.Threaded = .init(allocator);
+    defer threaded.deinit();
+    const cronz = try Cronz.create(threaded.io(), allocator);
 
     // executes tasks on every 0th, 5th, 10th, 20th, 30th and 40th second of each minute
     try cronz.AddCronJob("0,5,10,20,30,40 * * * * *", "task-1", task1);
@@ -24,7 +26,10 @@ fn task1() !void {
     msg = try allocator.alloc(u8, 100);
     msg = try std.fmt.bufPrint(msg, "Task 1 performed", .{});
 
-    std.log.debug("{d} {s}", .{ std.time.microTimestamp(), msg });
+    var threaded : std.Io.Threaded = .init(allocator);
+    defer threaded.deinit();
+    const io = threaded.io();
+    std.log.debug("{d} {s}", .{ (try std.Io.Clock.Timestamp.now(io, .real)).raw.nanoseconds, msg });
 }
 
 fn task2() !void {
